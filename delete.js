@@ -148,8 +148,6 @@ function processData(sender,message){
 		var info = JSON.parse(message) 
 		if(info.messages){
 			console.log("Came inside you "+ info.messages) ;
-			sendTextMessage(sender,0,info.messages) ; 	
-	
 			// for( var i =0;i< info.messages.length ;i++){
 			// 	var message = info.messages[i].value ;
 			// //	sleep(500) ; 
@@ -160,16 +158,12 @@ function processData(sender,message){
 		}
 	}
 	else{
-		var messageArray = [{  value : message  }] ; 
-        sendTextMessage(sender,0,messageArray) ;
+		sendTextMessage(sender,message)
 	}
 
 }
 
-function sendTextMessage(senderFbId, index, messageArray) {
-if( index == messageArray.length ) return ;
-text = messageArray[index].value ;  
-//console.log(text + "dfdfbdbsdbs"); 
+function sendTextMessage(senderFbId, text) {
 var json = {
     recipient: {id: senderFbId},
     message: {text: text},
@@ -183,27 +177,23 @@ var options = {
     headers: {'Content-Type': 'application/json'}
   };
 var callback = function(response) {	
-var str = '' ; 
+var str = ''
     response.on('data', function (chunk) {
       str += chunk;
     });
 response.on('end', function () {
-        console.log(str);
+ 
     });
-  } ; 
+  }
 var req = https.request(options, callback);
   req.on('error', function(e) {
     console.log('problem with request: '+ e);
   });
-
-  req.on('finish',function(){
-    //console.log("ended") ; 
-    console.log(text + "finished");
-	sendTextMessage(senderFbId,index+1,messageArray) ; 
-  });  
-  req.write(body) ;
+ 
+  req.write(body);
   req.end();
 }
+
 
 
 // var old_data = {Amount :"500" , Category:"sex",Date:"22/10/2020"} ;
